@@ -107,3 +107,130 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "payment/payment.proto",
 }
+
+const (
+	ListPaymentService_ProcessPayment_FullMethodName = "/payment.ListPaymentService/ProcessPayment"
+	ListPaymentService_ListPayments_FullMethodName   = "/payment.ListPaymentService/ListPayments"
+)
+
+// ListPaymentServiceClient is the client API for ListPaymentService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ListPaymentServiceClient interface {
+	ProcessPayment(ctx context.Context, in *PaymentRequest, opts ...grpc.CallOption) (*PaymentResponse, error)
+	ListPayments(ctx context.Context, in *ListPaymentsResponse, opts ...grpc.CallOption) (*ListPaymentsResponse, error)
+}
+
+type listPaymentServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewListPaymentServiceClient(cc grpc.ClientConnInterface) ListPaymentServiceClient {
+	return &listPaymentServiceClient{cc}
+}
+
+func (c *listPaymentServiceClient) ProcessPayment(ctx context.Context, in *PaymentRequest, opts ...grpc.CallOption) (*PaymentResponse, error) {
+	out := new(PaymentResponse)
+	err := c.cc.Invoke(ctx, ListPaymentService_ProcessPayment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *listPaymentServiceClient) ListPayments(ctx context.Context, in *ListPaymentsResponse, opts ...grpc.CallOption) (*ListPaymentsResponse, error) {
+	out := new(ListPaymentsResponse)
+	err := c.cc.Invoke(ctx, ListPaymentService_ListPayments_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ListPaymentServiceServer is the server API for ListPaymentService service.
+// All implementations must embed UnimplementedListPaymentServiceServer
+// for forward compatibility
+type ListPaymentServiceServer interface {
+	ProcessPayment(context.Context, *PaymentRequest) (*PaymentResponse, error)
+	ListPayments(context.Context, *ListPaymentsResponse) (*ListPaymentsResponse, error)
+	mustEmbedUnimplementedListPaymentServiceServer()
+}
+
+// UnimplementedListPaymentServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedListPaymentServiceServer struct {
+}
+
+func (UnimplementedListPaymentServiceServer) ProcessPayment(context.Context, *PaymentRequest) (*PaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProcessPayment not implemented")
+}
+func (UnimplementedListPaymentServiceServer) ListPayments(context.Context, *ListPaymentsResponse) (*ListPaymentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPayments not implemented")
+}
+func (UnimplementedListPaymentServiceServer) mustEmbedUnimplementedListPaymentServiceServer() {}
+
+// UnsafeListPaymentServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ListPaymentServiceServer will
+// result in compilation errors.
+type UnsafeListPaymentServiceServer interface {
+	mustEmbedUnimplementedListPaymentServiceServer()
+}
+
+func RegisterListPaymentServiceServer(s grpc.ServiceRegistrar, srv ListPaymentServiceServer) {
+	s.RegisterService(&ListPaymentService_ServiceDesc, srv)
+}
+
+func _ListPaymentService_ProcessPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListPaymentServiceServer).ProcessPayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ListPaymentService_ProcessPayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListPaymentServiceServer).ProcessPayment(ctx, req.(*PaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ListPaymentService_ListPayments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPaymentsResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListPaymentServiceServer).ListPayments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ListPaymentService_ListPayments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListPaymentServiceServer).ListPayments(ctx, req.(*ListPaymentsResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ListPaymentService_ServiceDesc is the grpc.ServiceDesc for ListPaymentService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ListPaymentService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "payment.ListPaymentService",
+	HandlerType: (*ListPaymentServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ProcessPayment",
+			Handler:    _ListPaymentService_ProcessPayment_Handler,
+		},
+		{
+			MethodName: "ListPayments",
+			Handler:    _ListPaymentService_ListPayments_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "payment/payment.proto",
+}
